@@ -1,34 +1,34 @@
-# Générateur de Newsletter en français et Braille
+# Newsletter Generator in French and Braille
 
 ## Description
 
-Ce projet est une application Streamlit déployée qui permet de générer une newsletter à partir d'articles populaires en français. L'utilisateur peut sélectionner une période, un mot-clé, et une langue (français ou Braille) pour générer et télécharger la newsletter sous forme de fichier PDF.
+This project is a deployed Streamlit application that allows users to generate a newsletter from popular articles in French. Users can select a time period, a keyword, and a language (French or Braille) to generate and download the newsletter as a PDF file.
 
-L'application utilise l'API de NewsAPI pour récupérer les articles, la bibliothèque Newspaper pour extraire le contenu complet des articles, et une fonction de traduction pour convertir le texte en Braille si nécessaire.
+The application uses the NewsAPI to retrieve articles, the Newspaper library to extract the full content of the articles, and a translation function to convert the text into Braille if needed.
 
-## Fonctionnalités
+## Features
 
-- **Sélection de la période** : Choisissez de récupérer les articles publiés depuis hier, les 7 derniers jours, ou les 30 derniers jours.
-- **Mot-clé** : Filtrez les articles en fonction de mots-clés spécifiques (technologie, culture, France, politique, international).
-- **Langue** : Sélectionnez la langue de génération de la newsletter (Français ou Braille).
-- **Téléchargement** : Téléchargez la newsletter générée au format PDF.
+- **Time Period Selection**: Choose to retrieve articles published since yesterday, the last 7 days, or the last 30 days.
+- **Keyword**: Filter articles based on specific keywords (technology, culture, France, politics, international).
+- **Language**: Select the language for generating the newsletter (French or Braille).
+- **Download**: Download the generated newsletter in PDF format.
 
-## Utilisation
+## Usage
 
-L'application est disponible en ligne via une instance Streamlit déployée. Pour l'utiliser :
+The application is available online via a deployed Streamlit instance. To use it:
 
-1. Accédez à l'application en suivant ce lien : 
-2. Sélectionnez la période, le mot-clé et la langue souhaitée.
-3. Cliquez sur "Générer la newsletter".
-4. Téléchargez le fichier PDF généré.
+1. Access the application via this link:
+2. Select the desired time period, keyword, and language.
+3. Click "Generate the newsletter."
+4. Download the generated PDF file.
 
-## Dépendances
+## Dependencies
 
-- `streamlit` : Pour créer l'interface utilisateur.
-- `requests` : Pour interagir avec l'API de NewsAPI.
-- `newspaper` : Pour extraire le contenu des articles.
-- `fpdf` : Pour générer des fichiers PDF.
+- `streamlit`: To create the user interface.
+- `requests`: To interact with the NewsAPI.
+- `newspaper`: To extract the content of the articles.
+- `fpdf`: To generate PDF files.
 
 ## License
 
-Ce projet est sous licence MIT. Consultez le fichier `LICENSE` pour plus d'informations.
+This project is licensed under the MIT License. 
