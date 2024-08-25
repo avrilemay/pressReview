@@ -1,4 +1,4 @@
-# Newsletter Generator in French and Braille
+# Press Review Generator in French and Braille
 
 ## Description
 
