@@ -184,7 +184,7 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
 
                 # buffer pour stocker le fichier PDF
                 buffer = BytesIO()
-                pdf.output(buffer)  # PDF généré dans le buffer
+                pdf.output(buffer, 'F')  # PDF généré dans le buffer
                 buffer.seek(0)  # retour au début du buffer
 
                 st.download_button(     # bouton pour télécharger le PDF
