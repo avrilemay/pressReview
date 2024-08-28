@@ -157,7 +157,8 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
             if sortie:  # si la sortie n'est pas vide
 
                 # Chemin vers le dossier contenant les polices
-                font_path = "DejaVuSans.ttf"
+                font_path = "fonts/DejaVuSans.ttf"
+
 
                 pdf = FPDF()    # créer un PDF
                 pdf.add_page()    # y ajoute page
