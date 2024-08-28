@@ -164,11 +164,7 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                 pdf.add_page()    # y ajoute page
 
                 # utilisation de la police DejaVu supportant les caractères brailles
-                try:
-                    pdf.add_font('DejaVu', '', font_path, uni=True)
-                    st.write("Police chargée avec succès.")
-                except Exception as e:
-                    st.write(f"Erreur lors du chargement de la police : {e}")
+                pdf.add_font('DejaVu', '', font_path, uni=True)
 
                 # traitement du contenu ligne par ligne pour l'ajout au PDF
                 for line in sortie.split("\n\n"):  # pour chaque ligne au sein des paragraphes
@@ -184,7 +180,7 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
 
                 # buffer pour stocker le fichier PDF
                 buffer = BytesIO()
-                pdf_data = pdf.output(dest='S').encode('latin1')  # 'S' pour retourner le contenu sous forme de chaîne
+                pdf_data = pdf.output(dest='S').encode('latin1')  # 'S' : contenu sous forme de str
                 buffer.write(pdf_data)
                 buffer.seek(0)  # retour au début du buffer
 
