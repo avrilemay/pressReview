@@ -78,7 +78,15 @@ def traduction(texte):
                 if majuscule_last_c:
                     # on réinitialise le marqueur (pour afficher le symbole maj à chaque fois)
                     majuscule_last_c = False
-                resultat += braille_symbols[c]  # on imprime le c en braille
+                symbole_exposant, equivalent_non_exposant = est_exposant(c)  # traite l'exposant
+                if symbole_exposant:  # si exposant il y a
+                    if not exposant_last_c:  # s'il ce n'était pas déjà un exposant
+                        resultat += symbole_exposant  # ajoute le symbole exposant
+                    resultat += braille_symbols[
+                        equivalent_non_exposant]  # ajoute c non exposant équiv
+                    exposant_last_c = True  # passe le marqueur à true
+                else:
+                    resultat += braille_symbols[c]  # on imprime le caractère en braille
                 index += 1  # avance dans l'index
                 continue  # passe à l'itération suivante
 
