@@ -11,11 +11,12 @@ from datetime import datetime, timedelta
 from newspaper import Article
 from io import BytesIO
 from fpdf import FPDF
+import re
 
 
 # fonction pour formater le texte braille (espaces aux '\u2800')
 def texte_braille_pdf(texte, largeur_max, pdf):
-    texte_formate = ""
+    texte_formate = "\u2800\u2800\u2800"
 
     # sépare le texte aux espaces braille ('\u2800') pour obtenir une liste de mots
     mots = texte.split('\u2800')
@@ -40,7 +41,8 @@ def texte_braille_pdf(texte, largeur_max, pdf):
     if ligne_actuelle:
         texte_formate += ligne_actuelle.rstrip()
 
-    return texte_formate.strip()
+    return texte_formate
+
 
 
 st.title("Générateur de Revue de Presse")  # titre de l'interface Streamlit
@@ -138,19 +140,22 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                     article_news.parse()
                     contenu = article_news.text  # extrait le texte intégral de l'article
 
+
+                        # remplace trois sauts de ligne ou plus par deux
                     if langue == "Français":    # si la revue de presse est en français
                         sortie += (f"Titre : {article['title']}\nSource : "
                                    f"{article['source']['name']}\nPublié le : "
-                                   f"{article['publishedAt']}\nURL : {article['url']}\nContenu : "
+                                   f"{article['publishedAt']}\nURL : {article['url']}\n\n"
                                    f"{contenu}\n\n"
-                                   f"------------------------------\n\n\n\n")
+                                   f"------------------------------\n\n")
                     else:   # si c'est en braille
-                        sortie += (f"⠨⠞⠊⠞⠗⠑⠒ {traduction(article['title'])}\n⠨⠎⠕⠥⠗⠉⠑⠒ "
-                                   f"{traduction(article['source']['name'])}\n⠨⠏⠥⠃⠇⠊⠿ ⠇⠑⠒ "
-                                   f"{traduction(article['publishedAt'])}\n⠨⠥⠗⠇⠒ "
-                                   f"{traduction(article['url'])}\n⠨⠉⠕⠝⠞⠑⠝⠥⠒ "
-                                   f"{traduction(contenu)}\n\n"
-                                   f"⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶\n\n\n\n")
+                        contenu = re.sub(r'\n{3,}', '\n\n', contenu)
+                        sortie += (f"\n\n\n⠨⠞⠊⠞⠗⠑⠒ {traduction(article['title'])}\n\n\t⠨⠎⠕⠥⠗⠉⠑⠒ "
+                                   f"{traduction(article['source']['name'])}\n\t⠨⠏⠥⠃⠇⠊⠿ ⠇⠑⠒ "
+                                   f"{traduction(article['publishedAt'])}\n\t⠨⠥⠗⠇⠒ "
+                                   f"{traduction(article['url'])}\n\t"
+                                   f"{traduction(contenu)}\n"
+                                   f"⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶")
                 except Exception as e:
                     st.error(f"Erreur lors de la récupération de l'article : {e}")
 
@@ -159,28 +164,31 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                 # Chemin vers le dossier contenant les polices
                 font_path = "fonts/DejaVuSans.ttf"
 
-
                 pdf = FPDF()    # créer un PDF
                 pdf.add_page()    # y ajoute page
 
                 # utilisation de la police DejaVu supportant les caractères brailles
                 pdf.add_font('DejaVu', '', font_path, uni=True)
 
-                # traitement du contenu ligne par ligne pour l'ajout au PDF
-                for line in sortie.split("\n\n"):  # pour chaque ligne au sein des paragraphes
+                # traitement du contenu paragraphe par paragraphe pour l'ajout au PDF
+                # Nettoyer `sortie` pour ne garder que des \n\n maximum
+                for para in sortie.split("\n\n"):  # pour chaque ligne au sein des paragraphes
                     if langue == "Braille":
+                        # para = para.strip()  # supprime les sauts de ligne
                         pdf.set_font('DejaVu', '', 15)  # taille plus grand
                         # ajuste le texte pour le braille et ajoute au pdf
-                        lignes_brailles = texte_braille_pdf(line, 180, pdf)
+                        lignes_brailles = texte_braille_pdf(para, 180, pdf)
                         pdf.multi_cell(0, 12, lignes_brailles)
+                        pdf.ln(1)  # saut de ligne
                     else:
                         pdf.set_font('DejaVu', '', 12)
-                        pdf.multi_cell(0, 10, line)
-                    pdf.ln()   # saut de ligne
+                        pdf.multi_cell(0, 10, para)
+                        pdf.ln(5)  # saut de ligne
+
 
                 # buffer pour stocker le fichier PDF
                 buffer = BytesIO()
-                pdf_data = pdf.output(dest='S').encode('latin1')  # 'S' : contenu sous forme de str
+                pdf_data = pdf.output(dest='S')  # 'S' : contenu sous forme de str
                 buffer.write(pdf_data)
                 buffer.seek(0)  # retour au début du buffer
 
