@@ -188,7 +188,7 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
 
                 # buffer pour stocker le fichier PDF
                 buffer = BytesIO()
-                pdf_data = pdf.output(dest='S')  # 'S' : contenu sous forme de str
+                pdf_data = pdf.output(dest='S').encode('latin1')  # 'S' : contenu sous forme de str
                 buffer.write(pdf_data)
                 buffer.seek(0)  # retour au début du buffer
 
