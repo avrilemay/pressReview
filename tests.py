@@ -2,7 +2,7 @@
 # Rôle ........ : Permet de tester la fonction de traduction
 # Auteur ...... : Avrile Floro
 # Version ..... : V0.1 du 27/08/2024
-# Licence ..... : réalisé dans le cadre du cours de I&C (projet)
+# Licence ..... : réalisé dans le cadre du cours de I&C & DLL (projet)
 
 from traduction import traduction
 
