@@ -1,7 +1,7 @@
 # Nom ......... : app.py
 # Rôle ........ : Application Streamlit (génération de revue de presse)
 # Auteur ...... : Avrile Floro
-# Version ..... : V0.2 du 28/08/2024
+# Version ..... : V0.3 du 01/09/2024
 # Licence ..... : réalisé dans le cadre du cours de I&C (projet)
 
 from traduction import traduction
@@ -38,7 +38,7 @@ langue = st.radio(  # choix de la langue
 
 if st.button("Générer la revue de presse"):     # bouton pour générer la revue de presse
     if duree and langue:    # il faut avoir choisi les options
-        api_key = st.secrets["api_key"]    # clé de l'API dans le fichier secret de Streamlti
+        api_key = st.secrets["api_key"]    # clé de l'API dans le fichier secret de Streamlit
 
         # les paramètres pour les 4 appels de l'API
         params_usine = {    # Usine Digitale
@@ -91,67 +91,61 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
             try:
                 # envoi la requête GET à l'API
                 response = requests.get("https://newsapi.org/v2/everything", params=param)
-                # ajout des art obtenus à liste articles avec extends
+                # ajout des art obtenus à liste articles avec extends (sous forme de dico)
                 articles.extend(response.json().get("articles", []))
             except Exception as e:
                 st.error(f"Erreur lors de la récupération des articles : {e}")
 
-        # crée un doc avec le contenu des articles, s'ils ont été récupérés
+        # crée une str avec le contenu des articles, s'ils ont été récupérés
         if articles:
             sortie = "" # str vide initialisée pour la sortie
-            for article in articles: # boucle et récupère l'URL de chaque article
-                article_url = article['url']
+            for art in articles: # boucle et récupère l'URL de chaque article
+                article_url = art['url']
                 try:
                     # utilise Newspaper pour récupérer le contenu de l'article
-                    article_news = Article(article_url)
-                    article_news.download()
-                    article_news.parse()
+                    article_news = Article(article_url)  # initialisation avec url
+                    article_news.download()  # téléchargement, obligatoire pour...
+                    article_news.parse()  # parser l'article
                     contenu = article_news.text  # extrait le texte intégral de l'article
 
-
-                        # remplace trois sauts de ligne ou plus par deux
                     if langue == "Français":    # si la revue de presse est en français
-                        sortie += (f"Titre : {article['title']}\nSource : "
-                                   f"{article['source']['name']}\nPublié le : "
-                                   f"{article['publishedAt']}\nURL : {article['url']}\n\n"
+                        sortie += (f"Titre : {art['title']}\nSource : "
+                                   f"{art['source']['name']}\nPublié le : "
+                                   f"{art['publishedAt']}\nURL : {art['url']}\n\n"
                                    f"{contenu}\n\n"
                                    f"------------------------------\n\n")
                     else:   # si c'est en braille
                         contenu = re.sub(r'\n{3,}', '\n\n', contenu)
-                        sortie += (f"\n\n\n⠨⠞⠊⠞⠗⠑⠒ {traduction(article['title'])}\n\n\t⠨⠎⠕⠥⠗⠉⠑⠒ "
-                                   f"{traduction(article['source']['name'])}\n\t⠨⠏⠥⠃⠇⠊⠿ ⠇⠑⠒ "
-                                   f"{traduction(article['publishedAt'])}\n\t⠨⠥⠗⠇⠒ "
-                                   f"{traduction(article['url'])}\n\t"
-                                   f"{traduction(contenu)}\n"
+                        sortie += (f"\n\n\n⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\n\n⠨⠎⠕⠥⠗⠉⠑⠒ "
+                                   f"   {traduction(art['source']['name'])}\n⠨⠏⠥⠃⠇⠊⠿ ⠇⠑⠒ "
+                                   f"   {traduction(art['publishedAt'])}\n⠨⠥⠗⠇⠒ "
+                                   f"   {traduction(art['url'])}\n"
+                                   f"   {traduction(contenu)}\n"
                                    f"⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶")
                 except Exception as e:
                     st.error(f"Erreur lors de la récupération de l'article : {e}")
 
             if sortie:  # si la sortie n'est pas vide
-
-                # Chemin vers le dossier contenant les polices
-                font_path = "fonts/DejaVuSans.ttf"
-
-                pdf = FPDF()    # créer un PDF
-                pdf.add_page()    # y ajoute page
-
+                font_path = "fonts/DejaVuSans.ttf" # dossier contenant DejaVuSans
+                pdf = FPDF()    # créer un objet PDF
+                pdf.add_page()    # on y ajoute page
                 # utilisation de la police DejaVu supportant les caractères brailles
                 pdf.add_font('DejaVu', '', font_path, uni=True)
 
+
                 # traitement du contenu paragraphe par paragraphe pour l'ajout au PDF
-                # Nettoyer `sortie` pour ne garder que des \n\n maximum
-                for para in sortie.split("\n\n"):  # pour chaque ligne au sein des paragraphes
+                for para in sortie.split("\n\n"):  # pour chaque paragraphe
                     if langue == "Braille":
-                        # para = para.strip()  # supprime les sauts de ligne
-                        pdf.set_font('DejaVu', '', 15)  # taille plus grand
+                        pdf.set_font('DejaVu', '', 17)  # taille plus grand
                         # ajuste le texte pour le braille et ajoute au pdf
-                        lignes_brailles = texte_braille_pdf(para, 180, pdf)
-                        pdf.multi_cell(0, 12, lignes_brailles)
+                        para_br = texte_braille_pdf(para, 180, pdf)
+                        pdf.multi_cell(0, 12, para_br)
                         pdf.ln(1)  # saut de ligne
                     else:
                         pdf.set_font('DejaVu', '', 12)
                         pdf.multi_cell(0, 10, para)
                         pdf.ln(5)  # saut de ligne
+
 
 
                 # buffer pour stocker le fichier PDF
@@ -183,14 +177,14 @@ def texte_braille_pdf(texte, largeur_max, pdf):
 
     for mot in mots:
         # ajoute le mot à la ligne courante
-        ligne_avec_mot = ligne_actuelle + mot
+        ligne_actuelle = ligne_actuelle + mot
 
         # calcule la largeur de la ligne actuelle si le mot est ajouté
-        largeur_ligne = pdf.get_string_width(ligne_avec_mot)
+        largeur_ligne = pdf.get_string_width(ligne_actuelle)
 
         if largeur_ligne <= largeur_max:
             # si la largeur de la ligne est dans la limite, on y ajoute le mot
-            ligne_actuelle = ligne_avec_mot + '\u2800'  # on ajoute l'espace braille
+            ligne_actuelle = ligne_actuelle + '\u2800'  # on ajoute l'espace braille
         else:
             # sinon, on ajoute la ligne au texte formaté et on commence une nouvelle ligne
             texte_formate += ligne_actuelle.rstrip() + '\n'
