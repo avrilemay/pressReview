@@ -2,7 +2,7 @@
 # Rôle ........ : Application Streamlit (génération de revue de presse)
 # Auteur ...... : Avrile Floro
 # Version ..... : V0.3 du 01/09/2024
-# Licence ..... : réalisé dans le cadre du cours de I&C (projet)
+# Licence ..... : réalisé dans le cadre du cours de I&C & DLL (projet)
 
 from traduction import traduction
 import streamlit as st
