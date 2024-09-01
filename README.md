@@ -2,7 +2,7 @@
 
 ## Description
 
-This project is a deployed Streamlit application that allows users to generate a newsletter from popular articles in French. Users can select a time period and a language (French or Braille) to generate and download the newsletter as a PDF file.
+This project is a deployed Streamlit application that allows users to generate a newsletter from popular articles in French and Braille. Users can select a time period and a language (French or Braille) to generate and download the newsletter as a PDF file.
 
 The application uses the NewsAPI to retrieve articles, the Newspaper library to extract the full content of the articles, and a translation function to convert the text into Braille if needed.
 
