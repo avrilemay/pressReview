@@ -24,14 +24,14 @@ def texte_braille_pdf(texte, largeur_max, pdf):
 
     for mot in mots:
         # ajoute le mot à la ligne courante
-        ligne_actuelle = ligne_actuelle + mot
+        ligne_avec_mot = ligne_actuelle + mot
 
         # calcule la largeur de la ligne actuelle si le mot est ajouté
-        largeur_ligne = pdf.get_string_width(ligne_actuelle)
+        largeur_ligne = pdf.get_string_width(ligne_avec_mot)
 
         if largeur_ligne <= largeur_max:
             # si la largeur de la ligne est dans la limite, on y ajoute le mot
-            ligne_actuelle = ligne_actuelle + '\u2800'  # on ajoute l'espace braille
+            ligne_actuelle = ligne_avec_mot + '\u2800'  # on ajoute l'espace braille
         else:
             # sinon, on ajoute la ligne au texte formaté et on commence une nouvelle ligne
             texte_formate += ligne_actuelle.rstrip() + '\n'
@@ -42,7 +42,6 @@ def texte_braille_pdf(texte, largeur_max, pdf):
         texte_formate += ligne_actuelle.rstrip()
 
     return texte_formate
-
 
 ##### Application Streamlit
 
