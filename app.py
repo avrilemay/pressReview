@@ -150,13 +150,20 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                                    f"------------------------------\n\n")
                     else:   # si c'est en braille
                         contenu = re.sub(r'\n{3,}', '\n\n', contenu)
-                        sortie += (f"\n\n\n⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\n\n⠨⠎⠕⠥⠗⠉⠑⠒ "
-                                   f"{traduction(art['source']['name'])}\n"
+                            sortie += (
+        f"\n\n\n⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\n"  # Ajoute le titre
+        f"⠨⠎⠕⠥⠗⠉⠑⠒ {traduction(art['source']['name'])}\n\n"  # Ajoute la source et un saut de ligne propre
+        f"{traduction(contenu)}\n"  # Ajoute le contenu de l'article traduit en braille
+        f"⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶"  # Ligne de séparation
+    )
+                        
+                        #sortie += (f"\n\n\n⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\n\n⠨⠎⠕⠥⠗⠉⠑⠒ "
+                                    #f"{traduction(art['source']['name'])}\n"
                                    #f"   {traduction(art['source']['name'])}\n⠨⠏⠥⠃⠇⠊⠿ ⠇⠑⠒ "
                                    #f"   {traduction(art['publishedAt'])}\n⠨⠥⠗⠇⠒ "
                                    #f"   {traduction(art['url'])}\n\n"
-                                   f"{traduction(contenu)}\n"
-                                   f"⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶")
+                                    #f"{traduction(contenu)}\n"
+                                    #f"⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶")
                 except Exception as e:
                     st.error(f"Erreur lors de la récupération de l'article : {e}")
 
