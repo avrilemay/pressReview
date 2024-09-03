@@ -150,7 +150,7 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                                    f"{contenu}\n\n"
                                    f"------------------------------\n\n")
                     else:   # si c'est en braille
-                        contenu = re.sub(r'\n{3,}', '\n\n', contenu)
+                        contenu = re.sub(r'\n{2,}', '\n', contenu)
                         sortie += (
                             f"\n\n\n⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\n\n"  # Ajoute le titre
                             f"⠨⠎⠕⠥⠗⠉⠑⠒ {traduction(art['source']['name'])}\n\n"  # Ajoute la source et un saut de ligne propre
