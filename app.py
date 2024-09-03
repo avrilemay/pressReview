@@ -155,7 +155,7 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                         sortie += (
                             f"\n\n\n⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\n"  # titre
                             f"\n\n"
-                            f"      ⠨⠎⠕⠥⠗⠉⠑⠒ {traduction(art['source']['name'])}\n\n"  # source
+                            f"\u2800\u2800\u2800⠨⠎⠕⠥⠗⠉⠑⠒ {traduction(art['source']['name'])}\n\n"  # source
                             f"⠨⠏⠥⠃⠇⠊⠿ ⠇⠑⠒ {traduction(date_publication)}\n\n" # date 
                             f"{traduction(contenu)}\n"  # contenu de l'article
                             f"⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶")  # séparation
