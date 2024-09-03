@@ -14,38 +14,36 @@ from fpdf import FPDF
 import re
 
 
-# fonction pour formater le texte braille (espaces aux '\u2800')
+# Fonction pour formater le texte braille avec des espaces au début de chaque paragraphe
 def texte_braille_pdf(texte, largeur_max, pdf):
     texte_formate = ""
 
-    # Sépare le texte en paragraphes par double sauts de ligne
-    paragraphes = texte.split('\n\n')
+    # Initialisation du début de ligne avec trois espaces braille seulement pour la première ligne du paragraphe
+    ligne_actuelle = "\u2800\u2800\u2800"
 
-    for paragraphe in paragraphes:
-        mots = paragraphe.split('\u2800')  # Sépare le paragraphe en mots
-        ligne_actuelle = "\u2800\u2800\u2800"  # Initialise la ligne avec trois espaces braille
+    # Sépare le texte aux espaces braille ('\u2800') pour obtenir une liste de mots
+    mots = texte.split('\u2800')
 
-        for mot in mots:
-            # Ajoute le mot à la ligne courante
-            ligne_avec_mot = ligne_actuelle + mot
+    for mot in mots:
+        # Ajoute le mot à la ligne courante
+        ligne_avec_mot = ligne_actuelle + mot
 
-            # Calcule la largeur de la ligne actuelle si le mot est ajouté
-            largeur_ligne = pdf.get_string_width(ligne_avec_mot)
+        # Calcule la largeur de la ligne actuelle si le mot est ajouté
+        largeur_ligne = pdf.get_string_width(ligne_avec_mot)
 
-            if largeur_ligne <= largeur_max:
-                # Si la largeur de la ligne est dans la limite, on y ajoute le mot
-                ligne_actuelle = ligne_avec_mot + '\u2800'  # On ajoute l'espace braille
-            else:
-                # Sinon, on ajoute la ligne au texte formaté et on commence une nouvelle ligne
-                texte_formate += ligne_actuelle.rstrip() + '\n'
-                ligne_actuelle = mot + '\u2800'  # Nouvelle ligne avec trois espaces braille
+        if largeur_ligne <= largeur_max:
+            # Si la largeur de la ligne est dans la limite, on y ajoute le mot
+            ligne_actuelle = ligne_avec_mot + '\u2800'  # On ajoute l'espace braille à la fin du mot
+        else:
+            # Sinon, on ajoute la ligne au texte formaté et on commence une nouvelle ligne sans ajouter de nouveaux espaces braille devant
+            texte_formate += ligne_actuelle.rstrip() + '\n'
+            ligne_actuelle = mot + '\u2800'  # Nouvelle ligne avec le mot, sans trois espaces braille
 
-        # Ajoute la dernière ligne du paragraphe
-        if ligne_actuelle:
-            texte_formate += ligne_actuelle.rstrip() + '\n\n'  # Ajoute deux sauts de ligne pour séparer les paragraphes
+    # Ajoute la dernière ligne
+    if ligne_actuelle:
+        texte_formate += ligne_actuelle.rstrip()
 
     return texte_formate
-
 ##### Application Streamlit
 
 st.title("Générateur de Revue de Presse")  # titre de l'interface Streamlit
