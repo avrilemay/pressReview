@@ -14,7 +14,7 @@ def traduction(texte):
     modificateur_maj = '\u2828'  # ⠰ (46) // à placer avant les majuscules ou sigles
     caracteres_arith = ['+', '-', '×', '÷', '÷', '=', '_']  # pour la notation Antoine
     fin_exposant = ['+', '-', '×', '÷', '÷', '=', '_', '.', ':', ';', '…', ',']  # pour exposant
-    c_exposant = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹', 'ⁱ', 'ⁿ', 'ᵉ', 'ᵐ']
+    c_exposant = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹', 'ⁱ', 'ⁿ', 'ᵉ', 'ᵐ', 'ʳ']
 
     # les indicateurs (opération arithmétiques, majuscules, exposants)
     math_last_c = False
@@ -71,19 +71,19 @@ def traduction(texte):
         # lorsqu'on rencontre un chiffre ou un caractère arithmétique
         if c.isdigit() or c in caracteres_arith:
                 # premier nombre ou chiffre arithmétique du mot
-                if not math_last_c:  # si le marqueur de maths n'était pas actif
+                symbole_exposant, equivalent_non_exposant = est_exposant(c)  # traite l'exposant
+                if not math_last_c and symbole_exposant is None:  # si pas marqueur math ni
+                    # puissance
                     resultat += modificateur_chiffre  # on ajoute le modificateur pour les maths
                     math_last_c = True  # on passe le marqueur à vrai
                 # si le mot contient des majuscules (et des chiffres)
                 if majuscule_last_c:
                     # on réinitialise le marqueur (pour afficher le symbole maj à chaque fois)
                     majuscule_last_c = False
-                symbole_exposant, equivalent_non_exposant = est_exposant(c)  # traite l'exposant
                 if symbole_exposant:  # si exposant il y a
                     if not exposant_last_c:  # s'il ce n'était pas déjà un exposant
                         resultat += symbole_exposant  # ajoute le symbole exposant
-                    resultat += braille_symbols[
-                        equivalent_non_exposant]  # ajoute c non exposant équiv
+                    resultat += braille_symbols[equivalent_non_exposant]  # ajoute c non exposant équiv
                     exposant_last_c = True  # passe le marqueur à true
                 else:
                     resultat += braille_symbols[c]  # on imprime le caractère en braille
@@ -105,7 +105,10 @@ def traduction(texte):
             # si c'est la 1e majuscule ou si le mot est mixte (maj, minus et chiffre)
             if not majuscule_last_c or mix_maj_min_num:
                 resultat += modificateur_maj   # on imprime le modificateur de majuscule
-            resultat += braille_symbols[c]   # imprime le symb braille de la lettre
+            if c in braille_symbols:
+                resultat += braille_symbols[c]  # on imprime le caractère en braille
+            else:
+                resultat += c
             majuscule_last_c = True   # passe à vrai l'indicateur de maj
             index += 1  # avance dans l'index
             continue   # passe à l'itération suivante
@@ -190,10 +193,10 @@ def traduction(texte):
 def est_exposant(c):
     # dico pour associer les exposants avec leurs équivalents non exposants
     exposants = {
+        '⁰': '0',  # ⁰ -> 0
         '¹': '1',  # ¹ -> 1
         '²': '2',  # ² -> 2
         '³': '3',  # ³ -> 3
-        '⁰': '0',  # ⁰ -> 0
         '⁴': '4',  # ⁴ -> 4
         '⁵': '5',  # ⁵ -> 5
         '⁶': '6',  # ⁶ -> 6
@@ -204,6 +207,7 @@ def est_exposant(c):
         'ⁿ': 'n',  # ⁿ -> n
         'ᵉ': 'e',  # ᵉ -> e
         'ᵐ': 'm',  # ᵐ -> m
+        'ʳ': 'r',  # ʳ -> r
     }
 
     if c in exposants:   # si le caractère est dans la liste des exposants, retourne
