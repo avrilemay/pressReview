@@ -14,21 +14,21 @@ from fpdf import FPDF
 import re
 
 
-# Fonction pour formater le texte braille avec des espaces au début de chaque paragraphe
+# fonction pour formater le texte braille avec des espaces au début de chaque paragraphe (alinéa)
 def texte_braille_pdf(texte, largeur_max, pdf):
     texte_formate = ""
 
-    # Initialisation du début de ligne avec trois espaces braille seulement pour la première ligne du paragraphe
+    # initialisation de la 1ere ligne du paragraphe avec trois espaces (alinéa)
     ligne_actuelle = "\u2800\u2800\u2800"
 
-    # Sépare le texte aux espaces braille ('\u2800') pour obtenir une liste de mots
+    # sépare le texte du paragraphe aux espaces braille ('\u2800') --> obtient une liste de mots
     mots = texte.split('\u2800')
 
     for mot in mots:
-        # Ajoute le mot à la ligne courante
-        ligne_avec_mot = ligne_actuelle + mot + '\u2800'
+        # ajoute le mot et l'espace à la ligne courante
+        ligne_avec_mot = ligne_actuelle + mot 
 
-        # Calcule la largeur de la ligne actuelle si le mot est ajouté
+        # calcule la largeur de la ligne actuelle si le mot et l'espace sont ajoutés
         largeur_ligne = pdf.get_string_width(ligne_avec_mot)
 
         if largeur_ligne <= largeur_max:
@@ -36,7 +36,7 @@ def texte_braille_pdf(texte, largeur_max, pdf):
             ligne_actuelle = ligne_avec_mot  # On ajoute l'espace braille à la fin du mot
         else:
             # Sinon, on ajoute la ligne au texte formaté et on commence une nouvelle ligne sans ajouter de nouveaux espaces braille devant
-            texte_formate += ligne_actuelle.rstrip() + '\n'
+            texte_formate += ligne_actuelle.rstrip(\u2800) + '\n'
             ligne_actuelle = mot + '\u2800'  # Nouvelle ligne avec le mot, sans trois espaces braille
 
     # Ajoute la dernière ligne
@@ -140,33 +140,27 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                     article_news = Article(article_url)  # initialisation avec url
                     article_news.download()  # téléchargement, obligatoire pour...
                     article_news.parse()  # parser l'article
-                    contenu = article_news.text  # extrait le texte intégral de l'article                        date_publiee = datetime.strptime(art['publishedAt'], "%Y-%m-%dT%H:%M:%SZ").strftime("%Y-%m-%d")
+                    contenu = article_news.text  # extrait le texte intégral de l'article                        
                     date_publiee = datetime.strptime(art['publishedAt'], "%Y-%m-%dT%H:%M:%SZ").strftime("%Y-%m-%d")
+                    # renvoie juste la date de publication
 
                     if langue == "Français":    # si la revue de presse est en français
-                        sortie += (f"Titre : {art['title']}\nSource : "
-                                   f"{art['source']['name']}\nPublié le : "
-                                   f"{date_publiee}\nURL : {art['url']}\n\n"
-                                   f"{contenu}\n\n"
-                                   f"------------------------------\n\n")
+                        sortie += (f"Titre : {art['title']}\nSource : " # titre
+                                   f"{art['source']['name']}\nPublié le : " # source
+                                   f"{date_publiee}\nURL : {art['url']}\n\n" # date publication
+                                   f"{contenu}\n\n" # contenu
+                                   f"------------------------------\n\n") # séparation
                     else:   # si c'est en braille
                         contenu = re.sub(r'\n{3,}', '\n\n', contenu)
                         sortie += (
-                            f"\n\n\n⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\n"  # Ajoute le titre
+                            f"\n\n\n⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\n"  # titre
                             f"\n\n"
-                            f"   ⠨⠎⠕⠥⠗⠉⠑⠒ {traduction(art['source']['name'])}\n\n"  # Ajoute la source et un saut de ligne propre
-                            f"⠨⠏⠥⠃⠇⠊⠿ ⠇⠑⠒ {traduction(date_publiee)}\n\n"
-                            f"{traduction(contenu)}\n"  # Ajoute le contenu de l'article traduit en braille
-                            f"⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶")  # Ligne de séparation
+                            f"   ⠨⠎⠕⠥⠗⠉⠑⠒ {traduction(art['source']['name'])}\n\n"  # source
+                            f"⠨⠏⠥⠃⠇⠊⠿ ⠇⠑⠒ {traduction(date_publiee)}\n\n" # date 
+                            f"{traduction(contenu)}\n"  # contenu de l'article
+                            f"⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶")  # séparation
     
-                        
-                        #sortie += (f"\n\n\n⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\n\n⠨⠎⠕⠥⠗⠉⠑⠒ "
-                                    #f"{traduction(art['source']['name'])}\n"
-                                   #f"   {traduction(art['source']['name'])}\n⠨⠏⠥⠃⠇⠊⠿ ⠇⠑⠒ "
-                                   #f"   {traduction(art['publishedAt'])}\n⠨⠥⠗⠇⠒ "
-                                   #f"   {traduction(art['url'])}\n\n"
-                                    #f"{traduction(contenu)}\n"
-                                    #f"⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶")
+
                 except Exception as e:
                     st.error(f"Erreur lors de la récupération de l'article : {e}")
 
