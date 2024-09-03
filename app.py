@@ -16,7 +16,7 @@ import re
 
 # fonction pour formater le texte braille (espaces aux '\u2800')
 def texte_braille_pdf(texte, largeur_max, pdf):
-    texte_formate = "\u2800\u2800\u2800"
+    texte_formate = "\u2800\u2800"
 
     # sépare le texte aux espaces braille ('\u2800') pour obtenir une liste de mots
     mots = texte.split('\u2800')
