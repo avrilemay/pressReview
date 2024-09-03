@@ -16,10 +16,10 @@ import re
 
 # Fonction pour formater le texte braille avec des espaces au début de chaque paragraphe
 def texte_braille_pdf(texte, largeur_max, pdf):
-    texte_formate = ""
+    texte_formate = "\u2800\u2800\u2800"
 
     # Initialisation du début de ligne avec trois espaces braille seulement pour la première ligne du paragraphe
-    ligne_actuelle = "\u2800\u2800\u2800"
+    ligne_actuelle = texte_formate
 
     # Sépare le texte aux espaces braille ('\u2800') pour obtenir une liste de mots
     mots = texte.split('\u2800')
