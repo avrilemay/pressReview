@@ -153,12 +153,12 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                     else:   # si c'est en braille
                         contenu = re.sub(r'\n{3,}', '\n\n', contenu)
                         sortie += (
-                            f"\n\n\n⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\n"  # titre
+                            f"⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\n"  # titre
                             f"\n\n"
                             f"\u2800\u2800\u2800⠨⠎⠕⠥⠗⠉⠑⠒ {traduction(art['source']['name'])}\n\n"  # source
                             f"⠨⠏⠥⠃⠇⠊⠿ ⠇⠑⠒ {traduction(date_publication)}\n\n" # date 
                             f"{traduction(contenu)}\n"  # contenu de l'article
-                            f"⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶")  # séparation
+                            f"⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶\n\n\n")  # séparation
     
 
                 except Exception as e:
