@@ -151,8 +151,8 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                         sortie += (f"\n\n\n⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\n\n⠨⠎⠕⠥⠗⠉⠑⠒ "
                                    f"   {traduction(art['source']['name'])}\n⠨⠏⠥⠃⠇⠊⠿ ⠇⠑⠒ "
                                    f"   {traduction(art['publishedAt'])}\n⠨⠥⠗⠇⠒ "
-                                   f"   {traduction(art['url'])}\n"
-                                   f"   {traduction(contenu)}\n"
+                                   f"   {traduction(art['url'])}\n\n"
+                                   f"{traduction(contenu)}\n"
                                    f"⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶")
                 except Exception as e:
                     st.error(f"Erreur lors de la récupération de l'article : {e}")
