@@ -129,8 +129,8 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
 
         # crée une str avec le contenu des articles, s'ils ont été récupérés
         if articles:
-            sortie = "" # str vide initialisée pour la sortie
-            for art in articles: # boucle et récupère l'URL de chaque article
+            sortie = ""  # str vide initialisée pour la sortie
+            for index, art in enumerate(articles):  # boucle avec index pour suivre la position
                 article_url = art['url']
                 try:
                     # utilise Newspaper pour récupérer le contenu de l'article
@@ -140,16 +140,20 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                     contenu = article_news.text  # extrait le texte intégral de l'article                        
                     date_publication = datetime.strptime(art['publishedAt'], "%Y-%m-%dT%H:%M:%SZ").strftime("%Y-%m-%d")
                     # renvoie juste la date de publication
-
+        
+                    dernier_art = index == len(articles) - 1  # vérifie si c'est le dernier élément
+        
                     if langue == "Français":    # si la revue de presse est en français
                         sortie += (
                             f"Titre : {art['title']}\n"  # titre
                             f"Source : {art['source']['name']}\n"   # source
-                            f"Publié le : {date_publication}\n"  # date de publication
+                            f"Publié le : {date_publication}\n"  # date 
                             f"URL : {art['url']}\n\n" # URL
-                            f"{contenu}\n\n"  # contenu de l'article
-                            f"------------------------------\n\n")    # séparation
-                    
+                            f"{contenu}\n\n")  # contenu 
+                        # séparation seulement si ce n'est pas le dernier
+                        if not dernier_art:
+                            sortie += "------------------------------\n\n"
+        
                     else:   # si c'est en braille
                         contenu = re.sub(r'\n{3,}', '\n\n', contenu)
                         sortie += (
@@ -157,9 +161,14 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                             f"\n\n"
                             f"\u2800\u2800\u2800⠨⠎⠕⠥⠗⠉⠑⠒ {traduction(art['source']['name'])}\n\n"  # source
                             f"⠨⠏⠥⠃⠇⠊⠿ ⠇⠑⠒ {traduction(date_publication)}\n\n" # date 
-                            f"{traduction(contenu)}\n"  # contenu de l'article
-                            f"⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶\n\n\n")  # séparation
-    
+                            f"{traduction(contenu)}\n")  # contenu 
+                        # séparation en braille seulement si ce n'est pas le dernier
+                        if not dernier_art:
+                            sortie += "⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶\n\n\n"
+
+        except Exception as e:
+            print(f"Erreur lors du traitement de l'article : {e}")
+
 
                 except Exception as e:
                     st.error(f"Erreur lors de la récupération de l'article : {e}")
