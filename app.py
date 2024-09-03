@@ -1,5 +1,5 @@
 # Nom ......... : app.py
-# Rôle ........ : Application Streamlit (génération de revue de presse)
+# Rôle ........ : Application Streamlit (génération de revue de presse) + formatage
 # Auteur ...... : Avrile Floro
 # Version ..... : V0.3 du 01/09/2024
 # Licence ..... : réalisé dans le cadre du cours de I&C & DLL (projet)
@@ -12,6 +12,39 @@ from newspaper import Article
 from io import BytesIO
 from fpdf import FPDF
 import re
+
+
+# fonction pour formater le texte braille (espaces aux '\u2800')
+def texte_braille_pdf(texte, largeur_max, pdf):
+    texte_formate = "\u2800\u2800\u2800"
+
+    # sépare le texte aux espaces braille ('\u2800') pour obtenir une liste de mots
+    mots = texte.split('\u2800')
+    ligne_actuelle = ""
+
+    for mot in mots:
+        # ajoute le mot à la ligne courante
+        ligne_actuelle = ligne_actuelle + mot
+
+        # calcule la largeur de la ligne actuelle si le mot est ajouté
+        largeur_ligne = pdf.get_string_width(ligne_actuelle)
+
+        if largeur_ligne <= largeur_max:
+            # si la largeur de la ligne est dans la limite, on y ajoute le mot
+            ligne_actuelle = ligne_actuelle + '\u2800'  # on ajoute l'espace braille
+        else:
+            # sinon, on ajoute la ligne au texte formaté et on commence une nouvelle ligne
+            texte_formate += ligne_actuelle.rstrip() + '\n'
+            ligne_actuelle = mot + '\u2800'  # nouvelle ligne avec le mot
+
+    # ajoute la dernière ligne
+    if ligne_actuelle:
+        texte_formate += ligne_actuelle.rstrip()
+
+    return texte_formate
+
+
+##### Application Streamlit
 
 st.title("Générateur de Revue de Presse")  # titre de l'interface Streamlit
 
@@ -167,31 +200,4 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
 
 
 
-# fonction pour formater le texte braille (espaces aux '\u2800')
-def texte_braille_pdf(texte, largeur_max, pdf):
-    texte_formate = "\u2800\u2800\u2800"
 
-    # sépare le texte aux espaces braille ('\u2800') pour obtenir une liste de mots
-    mots = texte.split('\u2800')
-    ligne_actuelle = ""
-
-    for mot in mots:
-        # ajoute le mot à la ligne courante
-        ligne_actuelle = ligne_actuelle + mot
-
-        # calcule la largeur de la ligne actuelle si le mot est ajouté
-        largeur_ligne = pdf.get_string_width(ligne_actuelle)
-
-        if largeur_ligne <= largeur_max:
-            # si la largeur de la ligne est dans la limite, on y ajoute le mot
-            ligne_actuelle = ligne_actuelle + '\u2800'  # on ajoute l'espace braille
-        else:
-            # sinon, on ajoute la ligne au texte formaté et on commence une nouvelle ligne
-            texte_formate += ligne_actuelle.rstrip() + '\n'
-            ligne_actuelle = mot + '\u2800'  # nouvelle ligne avec le mot
-
-    # ajoute la dernière ligne
-    if ligne_actuelle:
-        texte_formate += ligne_actuelle.rstrip()
-
-    return texte_formate
