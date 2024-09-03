@@ -18,28 +18,31 @@ import re
 def texte_braille_pdf(texte, largeur_max, pdf):
     texte_formate = ""
 
-    # sépare le texte aux espaces braille ('\u2800') pour obtenir une liste de mots
-    mots = texte.split('\u2800')
-    ligne_actuelle = ""
+    # Sépare le texte en paragraphes par double sauts de ligne
+    paragraphes = texte.split('\n\n')
 
-    for mot in mots:
-        # ajoute le mot à la ligne courante
-        ligne_avec_mot = ligne_actuelle + mot
+    for paragraphe in paragraphes:
+        mots = paragraphe.split('\u2800')  # Sépare le paragraphe en mots
+        ligne_actuelle = "\u2800\u2800\u2800"  # Initialise la ligne avec trois espaces braille
 
-        # calcule la largeur de la ligne actuelle si le mot est ajouté
-        largeur_ligne = pdf.get_string_width(ligne_avec_mot)
+        for mot in mots:
+            # Ajoute le mot à la ligne courante
+            ligne_avec_mot = ligne_actuelle + mot
 
-        if largeur_ligne <= largeur_max:
-            # si la largeur de la ligne est dans la limite, on y ajoute le mot
-            ligne_actuelle = ligne_avec_mot + '\u2800'  # on ajoute l'espace braille
-        else:
-            # sinon, on ajoute la ligne au texte formaté et on commence une nouvelle ligne
-            texte_formate += ligne_actuelle.rstrip() + '\n'
-            ligne_actuelle = mot + '\u2800'  # nouvelle ligne avec le mot
+            # Calcule la largeur de la ligne actuelle si le mot est ajouté
+            largeur_ligne = pdf.get_string_width(ligne_avec_mot)
 
-    # ajoute la dernière ligne
-    if ligne_actuelle:
-        texte_formate += ligne_actuelle.rstrip()
+            if largeur_ligne <= largeur_max:
+                # Si la largeur de la ligne est dans la limite, on y ajoute le mot
+                ligne_actuelle = ligne_avec_mot + '\u2800'  # On ajoute l'espace braille
+            else:
+                # Sinon, on ajoute la ligne au texte formaté et on commence une nouvelle ligne
+                texte_formate += ligne_actuelle.rstrip() + '\n'
+                ligne_actuelle = mot + '\u2800'  # Nouvelle ligne avec trois espaces braille
+
+        # Ajoute la dernière ligne du paragraphe
+        if ligne_actuelle:
+            texte_formate += ligne_actuelle.rstrip() + '\n\n'  # Ajoute deux sauts de ligne pour séparer les paragraphes
 
     return texte_formate
 
