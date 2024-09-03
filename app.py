@@ -143,9 +143,10 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                     contenu = article_news.text  # extrait le texte intégral de l'article
 
                     if langue == "Français":    # si la revue de presse est en français
+                        date_publiee = datetime.strptime(art['publishedAt'], "%Y-%m-%dT%H:%M:%SZ").strftime("%Y-%m-%d")
                         sortie += (f"Titre : {art['title']}\nSource : "
                                    f"{art['source']['name']}\nPublié le : "
-                                   f"{art['publishedAt']}\nURL : {art['url']}\n\n"
+                                   f"{date_publiee}\nURL : {art['url']}\n\n"
                                    f"{contenu}\n\n"
                                    f"------------------------------\n\n")
                     else:   # si c'est en braille
