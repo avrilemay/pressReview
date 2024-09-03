@@ -168,9 +168,9 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                 # traitement du contenu paragraphe par paragraphe pour l'ajout au PDF
                 for para in sortie.split("\n\n"):  # pour chaque paragraphe
                     if langue == "Braille":
-                        pdf.set_font('DejaVu', '', 15)  # taille plus grand
+                        pdf.set_font('DejaVu', '', 17)  # taille plus grand
                         # ajuste le texte pour le braille et ajoute au pdf
-                        para_br = texte_braille_pdf(para, 180, pdf)
+                        para_br = texte_braille_pdf(para, 185, pdf)
                         pdf.multi_cell(0, 12, para_br)
                         pdf.ln(1)  # saut de ligne
                     else:
