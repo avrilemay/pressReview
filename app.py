@@ -36,7 +36,7 @@ def texte_braille_pdf(texte, largeur_max, pdf):
             ligne_actuelle = ligne_avec_mot  # On ajoute l'espace braille à la fin du mot
         else:
             # Sinon, on ajoute la ligne au texte formaté et on commence une nouvelle ligne sans ajouter de nouveaux espaces braille devant
-            texte_formate += ligne_actuelle.strip() + '\n'
+            texte_formate += ligne_actuelle.rstrip() + '\n'
             ligne_actuelle = mot + '\u2800'  # Nouvelle ligne avec le mot, sans trois espaces braille
 
     # Ajoute la dernière ligne
