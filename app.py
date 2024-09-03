@@ -95,8 +95,8 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
              "pageSize": 1,
              "domains": "francetvinfo.fr",
              "apiKey": api_key, }
-
-         params_huffpost = {     # Huffington Post
+        
+        params_huffpost = {     # Huffington Post
              "q": "",
              "from": date_debut.strftime('%Y-%m-%d'),
              "to": date_fin.strftime('%Y-%m-%d'),
