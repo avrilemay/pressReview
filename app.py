@@ -122,7 +122,8 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
 
         articles = []   # pour stocker les articles
         # appelle l'API pour les 4 sources souhaitées
-        for param in [params_usine, params_france_info, params_huffpost, params_journaldunet]:
+        for param in [params_usine]:
+        #for param in [params_usine, params_france_info, params_huffpost, params_journaldunet]:
             try:
                 # envoi la requête GET à l'API
                 response = requests.get("https://newsapi.org/v2/everything", params=param)
