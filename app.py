@@ -32,26 +32,28 @@ def texte_braille_pdf(texte, largeur_max, pdf):
         largeur_ligne = pdf.get_string_width(ligne_avec_mot)
 
         if largeur_ligne <= largeur_max:
-            # Si la largeur de la ligne est dans la limite, on y ajoute le mot
-            ligne_actuelle = ligne_avec_mot  # On ajoute l'espace braille à la fin du mot
+            # si la largeur de la ligne est dans la limite, on y ajoute le mot et l'espace
+            ligne_actuelle = ligne_avec_mot  
         else:
-            # Sinon, on ajoute la ligne au texte formaté et on commence une nouvelle ligne sans ajouter de nouveaux espaces braille devant
+            # sinon, on ajoute la ligne au texte formaté (sans espace à la fin)
             texte_formate += ligne_actuelle.rstrip('\u2800') + '\n'
-            ligne_actuelle = mot + '\u2800'  # Nouvelle ligne avec le mot, sans trois espaces braille
+            # on commence une nouvelle ligne (sans alinéa)
+            ligne_actuelle = mot + '\u2800'
 
-    # Ajoute la dernière ligne
+    # ajoute la dernière ligne
     if ligne_actuelle:
-        texte_formate += ligne_actuelle.rstrip()
+        texte_formate += ligne_actuelle.rstrip().rstrip('\u2800')
 
     return texte_formate
+
+
 ##### Application Streamlit
 
 st.title("Générateur de Revue de Presse")  # titre de l'interface Streamlit
 
 duree = st.selectbox(  # sélection de la durée
     "Récupérer des articles publiés...",
-    options=["depuis hier", "depuis 7 jours", "depuis 30 jours"],
-)
+    options=["depuis hier", "depuis 7 jours", "depuis 30 jours"],)
 
 date_fin = datetime.today()  # jusqu'à date du jour
 
@@ -82,46 +84,41 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
             "language": "fr",
             "pageSize": 1,
             "domains": "usine-digitale.fr",
-            "apiKey": api_key,
-        }
+            "apiKey": api_key, }
 
-#        params_france_info = {  # France Info
- #           "q": "",
- #            "from": date_debut.strftime('%Y-%m-%d'),
-  #           "to": date_fin.strftime('%Y-%m-%d'),
-  #           "sortBy": "popularity",
-   #          "language": "fr",
-    #         "pageSize": 1,
-   #          "domains": "francetvinfo.fr",
-    #         "apiKey": api_key,
-   #      }
+        params_france_info = {  # France Info
+            "q": "",
+             "from": date_debut.strftime('%Y-%m-%d'),
+             "to": date_fin.strftime('%Y-%m-%d'),
+             "sortBy": "popularity",
+             "language": "fr",
+             "pageSize": 1,
+             "domains": "francetvinfo.fr",
+             "apiKey": api_key, }
 
-   #      params_huffpost = {     # Huffington Post
-    #         "q": "",
-  # #          "from": date_debut.strftime('%Y-%m-%d'),
-   #          "to": date_fin.strftime('%Y-%m-%d'),
-  #          "sortBy": "popularity",
-  #          "language": "fr",
-  #           "pageSize": 1,
-   #          "domains": "huffingtonpost.fr",
-   #          "apiKey": api_key,
- #        }
+         params_huffpost = {     # Huffington Post
+             "q": "",
+             "from": date_debut.strftime('%Y-%m-%d'),
+             "to": date_fin.strftime('%Y-%m-%d'),
+             "sortBy": "popularity",
+             "language": "fr",
+             "pageSize": 1,
+             "domains": "huffingtonpost.fr",
+             "apiKey": api_key, }
 
-  #       params_journaldunet = {     # Journal du Net
- #            "q": "",
-  #           "from": date_debut.strftime('%Y-%m-%d'),
-  #           "to": date_fin.strftime('%Y-%m-%d'),
-  #           "sortBy": "popularity",
-   #          "language": "fr",
-  # #           "pageSize": 1,
-   #          "domains": "journaldunet.com",
-  #           "apiKey": api_key,
-    #     }
+         params_journaldunet = {     # Journal du Net
+             "q": "",
+             "from": date_debut.strftime('%Y-%m-%d'),
+             "to": date_fin.strftime('%Y-%m-%d'),
+             "sortBy": "popularity",
+             "language": "fr",
+             "pageSize": 1,
+             "domains": "journaldunet.com",
+             "apiKey": api_key, }
 
         articles = []   # pour stocker les articles
         # appelle l'API pour les 4 sources souhaitées
-        for param in [params_usine]:
-        #for param in [params_usine, params_france_info, params_huffpost, params_journaldunet]:
+        for param in [params_usine, params_france_info, params_huffpost, params_journaldunet]:
             try:
                 # envoi la requête GET à l'API
                 response = requests.get("https://newsapi.org/v2/everything", params=param)
@@ -141,15 +138,18 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                     article_news.download()  # téléchargement, obligatoire pour...
                     article_news.parse()  # parser l'article
                     contenu = article_news.text  # extrait le texte intégral de l'article                        
-                    date_publiee = datetime.strptime(art['publishedAt'], "%Y-%m-%dT%H:%M:%SZ").strftime("%Y-%m-%d")
+                    date_publication = datetime.strptime(art['publishedAt'], "%Y-%m-%dT%H:%M:%SZ").strftime("%Y-%m-%d")
                     # renvoie juste la date de publication
 
                     if langue == "Français":    # si la revue de presse est en français
-                        sortie += (f"Titre : {art['title']}\nSource : " # titre
-                                   f"{art['source']['name']}\nPublié le : " # source
-                                   f"{date_publiee}\nURL : {art['url']}\n\n" # date publication
-                                   f"{contenu}\n\n" # contenu
-                                   f"------------------------------\n\n") # séparation
+                        sortie += (
+                            f"Titre : {art['title']}\n"  # titre
+                            f"Source : {art['source']['name']}\n"   # source
+                            f"Publié le : {date_publication}\n"  # date de publication
+                            f"URL : {art['url']}\n\n" # URL
+                            f"{contenu}\n\n"  # contenu de l'article
+                            f"------------------------------\n\n")    # séparation
+                    
                     else:   # si c'est en braille
                         contenu = re.sub(r'\n{3,}', '\n\n', contenu)
                         sortie += (
@@ -177,7 +177,7 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                     if langue == "Braille":
                         pdf.set_font('DejaVu', '', 17)  # taille plus grand
                         # ajuste le texte pour le braille et ajoute au pdf
-                        para_br = texte_braille_pdf(para, 185, pdf)
+                        para_br = texte_braille_pdf(para, 180, pdf)
                         pdf.multi_cell(0, 12, para_br)
                         pdf.ln(1)  # saut de ligne
                     else:
