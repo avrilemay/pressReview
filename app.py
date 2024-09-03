@@ -16,7 +16,7 @@ import re
 
 # fonction pour formater le texte braille (espaces aux '\u2800')
 def texte_braille_pdf(texte, largeur_max, pdf):
-    texte_formate = "\u2800\u2800"
+    texte_formate = ""
 
     # sépare le texte aux espaces braille ('\u2800') pour obtenir une liste de mots
     mots = texte.split('\u2800')
@@ -169,7 +169,7 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                 # traitement du contenu paragraphe par paragraphe pour l'ajout au PDF
                 for para in sortie.split("\n\n"):  # pour chaque paragraphe
                     if langue == "Braille":
-                        pdf.set_font('DejaVu', '', 17)  # taille plus grand
+                        pdf.set_font('DejaVu', '', 16)  # taille plus grand
                         # ajuste le texte pour le braille et ajoute au pdf
                         para_br = texte_braille_pdf(para, 180, pdf)
                         pdf.multi_cell(0, 12, para_br)
