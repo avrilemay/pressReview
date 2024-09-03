@@ -140,10 +140,10 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                     article_news = Article(article_url)  # initialisation avec url
                     article_news.download()  # téléchargement, obligatoire pour...
                     article_news.parse()  # parser l'article
-                    contenu = article_news.text  # extrait le texte intégral de l'article
+                    contenu = article_news.text  # extrait le texte intégral de l'article                        date_publiee = datetime.strptime(art['publishedAt'], "%Y-%m-%dT%H:%M:%SZ").strftime("%Y-%m-%d")
+                    date_publiee = datetime.strptime(art['publishedAt'], "%Y-%m-%dT%H:%M:%SZ").strftime("%Y-%m-%d")
 
                     if langue == "Français":    # si la revue de presse est en français
-                        date_publiee = datetime.strptime(art['publishedAt'], "%Y-%m-%dT%H:%M:%SZ").strftime("%Y-%m-%d")
                         sortie += (f"Titre : {art['title']}\nSource : "
                                    f"{art['source']['name']}\nPublié le : "
                                    f"{date_publiee}\nURL : {art['url']}\n\n"
@@ -152,11 +152,13 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                     else:   # si c'est en braille
                         contenu = re.sub(r'\n{3,}', '\n\n', contenu)
                         sortie += (
-        f"\n\n\n⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\u2800\n"  # Ajoute le titre
-        f"⠨⠎⠕⠥⠗⠉⠑⠒ {traduction(art['source']['name'])}\u2800\n\n"  # Ajoute la source et un saut de ligne propre
-        f"{traduction(contenu)}\n"  # Ajoute le contenu de l'article traduit en braille
-        f"⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶"  # Ligne de séparation
-    )
+                            f"\n\n\n⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\u2800\n\n"  # Ajoute le titre
+                            f"⠨⠎⠕⠥⠗⠉⠑⠒ {traduction(art['source']['name'])}\u2800\n"  # Ajoute la source et un saut de ligne propre
+                            f"\u2800\u2800\u2800⠨⠏⠥⠃⠇⠊⠿ ⠇⠑⠒ {date_publiee}\n"
+                                   #f"   {traduction(art['publishedAt'])}\n⠨⠥⠗⠇⠒ "
+                            f"\u2800\u2800\u2800{traduction(contenu)}\n"  # Ajoute le contenu de l'article traduit en braille
+                            f"⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶")  # Ligne de séparation
+    
                         
                         #sortie += (f"\n\n\n⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\n\n⠨⠎⠕⠥⠗⠉⠑⠒ "
                                     #f"{traduction(art['source']['name'])}\n"
