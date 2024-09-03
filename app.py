@@ -105,8 +105,8 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
              "pageSize": 1,
              "domains": "huffingtonpost.fr",
              "apiKey": api_key, }
-
-         params_journaldunet = {     # Journal du Net
+        
+        params_journaldunet = {     # Journal du Net
              "q": "",
              "from": date_debut.strftime('%Y-%m-%d'),
              "to": date_fin.strftime('%Y-%m-%d'),
