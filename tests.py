@@ -8,7 +8,7 @@ from traduction import traduction
 
 # fonction pour tester différents exemples du doc de référence
 def test_traduction():
-    exemples = [
+    exemples = [ # les exemples à tester (issus du CBFU)
         "PIERRE",
         "Pierre",
         "I, II, III",
@@ -54,7 +54,17 @@ def test_traduction():
         "[123]",
         "À cette époque –juin 2001– fut signé un Accord de coopération à Casablanca.",
         "Les 63 – ou 64 – symboles braille",
-        "100 $ ou 100$ ou $100"
+        "100 $ ou 100$ ou $100",
+        "1ᵉʳ",
+        "2ᵉ",
+        "15²",
+        "m²",
+        "h. ou hab.",
+        "av.",
+        "bd ou boul.",
+        "h",
+        "W",
+        "L"
     ]
 
     resultats_attendus = [
@@ -107,6 +117,16 @@ def test_traduction():
         # À cette époque –juin 2001– fut signé un Accord de coopération à Casablanca.
         "⠨⠇⠑⠎⠀⠠⠫⠩⠀⠤⠤⠀⠕⠥⠀⠠⠫⠹⠀⠤⠤⠀⠎⠽⠍⠃⠕⠇⠑⠎⠀⠃⠗⠁⠊⠇⠇⠑",  # Les 63 – ou 64 – symboles braille
         "⠠⠡⠼⠼⠀⠘⠎⠀⠕⠥⠀⠠⠡⠼⠼⠘⠎⠀⠕⠥⠀⠘⠎⠠⠡⠼⠼",  # 100 $ ou 100$ ou $100
+        "⠠⠡⠈⠑⠗",   # 1ᵉʳ
+        "⠠⠣⠈⠑",   # 2ᵉ
+        "⠠⠡⠱⠈⠣",   # 15²
+        "⠍⠈⠣",   # m²
+        "⠓⠲⠀⠕⠥⠀⠓⠁⠃⠲",     #  h. ou hab. (pour habitants)
+        "⠁⠧⠲",     # av. (pour avenue)
+        "⠃⠙⠀⠕⠥⠀⠃⠕⠥⠇⠲",     # bd ou boul. (pour boulevard)
+        "⠓",     # h (pour heure)
+        "⠨⠺",     # W (pour watt)
+        "⠨⠇",     # L ((pour litre)
     ]
 
     # vérifie les traductions obtenues vs les résultats attendus
@@ -120,6 +140,10 @@ def test_traduction():
 
 # appel de la fonction de test
 test_traduction()
+print("\n\n")
+print("Tentative de traduction du caractère arménien 'ն' =", traduction("ն"))
+print("Tentative de traduction du caractère hébreu 'ט' =", traduction("ט"))
+print("Tentative de traduction du caractère arabe 'ٹ' =", traduction("ٹ"))
 
 
 
