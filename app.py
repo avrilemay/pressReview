@@ -166,12 +166,9 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
                         if not dernier_art:
                             sortie += "⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶\n\n\n"
 
-        except Exception as e:
-            print(f"Erreur lors du traitement de l'article : {e}")
-
-
                 except Exception as e:
-                    st.error(f"Erreur lors de la récupération de l'article : {e}")
+                    print(f"Erreur lors du traitement de l'article : {e}")
+                    
 
             if sortie:  # si la sortie n'est pas vide
                 font_path = "fonts/DejaVuSans.ttf" # dossier contenant DejaVuSans
