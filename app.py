@@ -87,38 +87,38 @@ if st.button("Générer la revue de presse"):     # bouton pour générer la rev
             "apiKey": api_key,
         }
 
-        params_france_info = {  # France Info
-            "q": "",
-            "from": date_debut.strftime('%Y-%m-%d'),
-            "to": date_fin.strftime('%Y-%m-%d'),
-            "sortBy": "popularity",
-            "language": "fr",
-            "pageSize": 1,
-            "domains": "francetvinfo.fr",
-            "apiKey": api_key,
-        }
+#        params_france_info = {  # France Info
+ #           "q": "",
+ #            "from": date_debut.strftime('%Y-%m-%d'),
+  #           "to": date_fin.strftime('%Y-%m-%d'),
+  #           "sortBy": "popularity",
+   #          "language": "fr",
+    #         "pageSize": 1,
+   #          "domains": "francetvinfo.fr",
+    #         "apiKey": api_key,
+   #      }
 
-        params_huffpost = {     # Huffington Post
-            "q": "",
-            "from": date_debut.strftime('%Y-%m-%d'),
-            "to": date_fin.strftime('%Y-%m-%d'),
-            "sortBy": "popularity",
-            "language": "fr",
-            "pageSize": 1,
-            "domains": "huffingtonpost.fr",
-            "apiKey": api_key,
-        }
+   #      params_huffpost = {     # Huffington Post
+    #         "q": "",
+  # #          "from": date_debut.strftime('%Y-%m-%d'),
+   #          "to": date_fin.strftime('%Y-%m-%d'),
+  #          "sortBy": "popularity",
+  #          "language": "fr",
+  #           "pageSize": 1,
+   #          "domains": "huffingtonpost.fr",
+   #          "apiKey": api_key,
+ #        }
 
-        params_journaldunet = {     # Journal du Net
-            "q": "",
-            "from": date_debut.strftime('%Y-%m-%d'),
-            "to": date_fin.strftime('%Y-%m-%d'),
-            "sortBy": "popularity",
-            "language": "fr",
-            "pageSize": 1,
-            "domains": "journaldunet.com",
-            "apiKey": api_key,
-        }
+  #       params_journaldunet = {     # Journal du Net
+ #            "q": "",
+  #           "from": date_debut.strftime('%Y-%m-%d'),
+  #           "to": date_fin.strftime('%Y-%m-%d'),
+  #           "sortBy": "popularity",
+   #          "language": "fr",
+  # #           "pageSize": 1,
+   #          "domains": "journaldunet.com",
+  #           "apiKey": api_key,
+    #     }
 
         articles = []   # pour stocker les articles
         # appelle l'API pour les 4 sources souhaitées
