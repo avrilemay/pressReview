@@ -33,19 +33,19 @@ def traduction(texte):
             exposant_last_c = False # passage du marqueur à faux
             # on continue dans la boucle pour le traitement selon le type de caractère;
 
+        # lorsqu'un caractère de resserrement précède un espace et un caractère non blanc
+        if c in "«“'([\"" and (index + 2) < texte_len and texte[index+1] == " " and not texte[
+            index+2].isspace():
+            resultat += braille_symbols[c]  # on imprime le caractère en Braille
+            index += 2  # on avance de 2 dans l'index (on saute l'espace)
+            continue  # on passe à l'itération suivante
+        
         # lorsqu'un espace précède un caractère de resserrement
         if c == " " and (index + 1) < texte_len and texte[index+1] in "»”')]\"":
             index += 1  # on saute l'espace (en avançant dans l'index)
             c = texte[index]  # on met à jour le caractère étudié
             resultat += braille_symbols[c]  # on imprime le caractère en Braille
             index += 1  # on avance dans l'index
-            continue  # on passe à l'itération suivante
-
-        # lorsqu'un caractère de resserrement précède un espace et un caractère non blanc
-        if c in "«“'([\"" and (index + 2) < texte_len and texte[index+1] == " " and not texte[
-            index+2].isspace():
-            resultat += braille_symbols[c]  # on imprime le caractère en Braille
-            index += 2  # on avance de 2 dans l'index (on saute l'espace)
             continue  # on passe à l'itération suivante
 
         # lorsqu'un signe de ponctuation suit un mot après un espace
