@@ -146,7 +146,7 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
                         sortie += (
                             f"Titre : {art['title']}\n"  # titre
                             f"Source : {art['source']['name']}\n"  # source
-                            f"Publié le : {date_publication}\n"  # date 
+                            f"Publié le : {date_publication}\n\n"  # date 
                             f"{contenu}\n\n")  # contenu
 
                         # séparation seulement si ce n'est pas le dernier
@@ -186,7 +186,7 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
                     else:   # pour le français
                         pdf.set_font('DejaVu', '', 12)
                         pdf.multi_cell(0, 10, para)
-                        pdf.ln(5)  # saut de ligne
+                        pdf.ln(1)  # saut de ligne
 
                 # buffer pour stocker le fichier PDF
                 buffer = BytesIO()
