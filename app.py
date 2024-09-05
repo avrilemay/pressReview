@@ -186,7 +186,7 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
                     else:   # pour le français
                         pdf.set_font('DejaVu', '', 12)
                         pdf.multi_cell(0, 10, para)
-                        pdf.ln(5)  # saut de ligne
+                        pdf.ln()  # saut de ligne
 
                 # buffer pour stocker le fichier PDF
                 buffer = BytesIO()
