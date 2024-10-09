@@ -16,7 +16,7 @@ The application uses the NewsAPI to retrieve articles, the Newspaper library to 
 
 The application is available online via a deployed Streamlit instance. To use it:
 
-1. Access the application via this link:
+1. Access the application via this link: https://revue-de-presse.streamlit.app/ 
 2. Select the desired time period, keyword, and language.
 3. Click "Generate the newsletter."
 4. Download the generated PDF file.
