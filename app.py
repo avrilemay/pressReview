@@ -122,7 +122,7 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
                 # ajout des art obtenus à liste articles avec extends (sous forme de dico)
                 articles.extend(response.json().get("articles", []))
             except Exception as e:
-                print(f"Erreur lors de la récupération des articles : {e}")
+                st.error(f"Erreur lors de la récupération des articles : {e}")
 
         # crée une str avec le contenu des articles, s'ils ont été récupérés
         if articles:
