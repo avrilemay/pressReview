@@ -169,6 +169,7 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
                     st.error(f"Erreur lors du traitement de l'article : {e}")
 
             if sortie:  # si la sortie n'est pas vide
+                st.write("Contenu à générer dans le PDF : ", sortie)  # A SUPPRIMER
                 font_path = "fonts/DejaVuSans.ttf"  # dossier contenant DejaVuSans
                 pdf = FPDF()  # créer un objet PDF
                 pdf.add_page()  # on y ajoute page
