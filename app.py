@@ -13,6 +13,8 @@ from io import BytesIO
 from fpdf import FPDF
 import re
 
+def remove_unsupported_characters(text):
+    return ''.join(c for c in text if ord(c) <= 0xFFFF)
 
 # fonction pour formater le texte braille avec des espaces au début de chaque paragraphe (alinéa)
 def texte_braille_pdf(texte, largeur_max, pdf):
@@ -143,7 +145,7 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
                     # élément
 
                     if langue == "Français":  # si la revue de presse est en français
-                        contenu = re.sub(r'\n{3,}', '\n\n', contenu)
+                        contenu = re.sub(r'\n{3,}', '\n\n', remove_unsupported_characters(contenu))
                         sortie += (
                             f"Titre : {art['title']}\n"  # titre
                             f"Source : {art['source']['name']}\n"  # source
@@ -154,7 +156,7 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
                             sortie += "------------------------------\n\n"
 
                     else:  # si c'est en braille
-                        contenu = re.sub(r'\n{3,}', '\n\n', contenu)
+                        contenu = re.sub(r'\n{3,}', '\n\n', remove_unsupported_characters(contenu))
                         sortie += (
                             f"⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\n"  # titre
                             f"\n\n"
@@ -166,7 +168,7 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
                             sortie += "⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶\n\n\n"
 
                 except Exception as e:
-                    print(f"Erreur lors du traitement de l'article : {e}")
+                    st.error(f"Erreur lors du traitement de l'article : {e}")
 
             if sortie:  # si la sortie n'est pas vide
                 font_path = "fonts/DejaVuSans.ttf"  # dossier contenant DejaVuSans
@@ -190,7 +192,8 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
 
                 # buffer pour stocker le fichier PDF
                 buffer = BytesIO()
-                pdf_data = pdf.output(dest='S').encode('latin1')  # 'S' : contenu sous forme de str
+                pdf_data = pdf.output(dest='S')  # 'S' : contenu sous forme de str
+                # pdf_data = pdf.output(dest='S').encode('latin1')
                 buffer.write(pdf_data)
                 buffer.seek(0)  # retour au début du buffer
 
