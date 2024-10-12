@@ -14,6 +14,9 @@ from fpdf import FPDF
 import re
 
 
+def clean_text(texte):
+    return ''.join([c if ord(c) <= 65535 else '?' for c in texte])
+
 # fonction pour formater le texte braille avec des espaces au début de chaque paragraphe (alinéa)
 def texte_braille_pdf(texte, largeur_max, pdf):
     texte_formate = ""
@@ -228,5 +231,4 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
 
 
 
-def clean_text(texte):
-    return ''.join([c if ord(c) <= 65535 else '?' for c in texte])
+
