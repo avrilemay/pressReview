@@ -47,6 +47,9 @@ def texte_braille_pdf(texte, largeur_max, pdf):
     return texte_formate
 
 
+
+
+
 ##### Application Streamlit
 
 st.title("Générateur de Revue de Presse")  # titre de l'interface Streamlit
@@ -165,11 +168,12 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
                         if not dernier_art:
                             sortie += "⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶\n\n\n"
 
+                    sortie = clean_text(sortie)  # Nettoyage du texte
+                
                 except Exception as e:
                     st.error(f"Erreur lors du traitement de l'article : {e}")
 
             if sortie:  # si la sortie n'est pas vide
-                st.write("Contenu à générer dans le PDF : ", sortie)  # A SUPPRIMER
                 font_path = "fonts/DejaVuSans.ttf"  # dossier contenant DejaVuSans
                 pdf = FPDF()  # créer un objet PDF
                 pdf.add_page()  # on y ajoute page
@@ -221,3 +225,8 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
     
     else:
         st.error("Veuillez remplir tous les champs avant de générer la revue de presse.")
+
+
+
+def clean_text(texte):
+    return ''.join([c if ord(c) <= 65535 else '?' for c in texte])
