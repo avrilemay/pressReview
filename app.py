@@ -181,18 +181,20 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
                 pdf = FPDF()  # créer un objet PDF
                 pdf.add_page()  # on y ajoute page
                 # utilisation de la police DejaVu supportant les caractères brailles
-                pdf.add_font('DejaVu', '', font_path, uni=True, subset=True)
+                pdf.add_font('DejaVu', '', font_path, uni=True)
 
                 # traitement du contenu paragraphe par paragraphe pour l'ajout au PDF
                 for para in sortie.split("\n\n"):  # pour chaque paragraphe
                     if langue == "Braille":
                         pdf.set_font('DejaVu', '', 18)  # taille plus grand
                         # ajuste le texte pour le braille et ajoute au pdf
+                        para = clean_text(para)
                         para_br = texte_braille_pdf(para, 190, pdf)
                         pdf.multi_cell(0, 12, para_br)
                         pdf.ln(1)  # saut de ligne
                     else:   # pour le français
                         pdf.set_font('DejaVu', '', 12)
+                        para = clean_text(para)
                         pdf.multi_cell(0, 10, para)
                         pdf.ln()  # saut de ligne
 
