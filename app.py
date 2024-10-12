@@ -201,5 +201,12 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
                     mime="application/pdf"
                 )
 
+        # si aucun article n'a été récupéré (les articles de la veille ne sont pas publiés)
+        if not articles and duree == "depuis hier":
+            st.error(
+                "Les articles de la veille ne sont pas encore disponibles en raison d'un décalage de"
+                " 24h entre leur publication et leur mise en ligne sur l'API. Veuillez choisir une "
+                "durée plus longue s'il vous plaît.")
+    
     else:
         st.error("Veuillez remplir tous les champs avant de générer la revue de presse.")
