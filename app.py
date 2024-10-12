@@ -13,8 +13,6 @@ from io import BytesIO
 from fpdf import FPDF
 import re
 
-def remove_unsupported_characters(text):
-    return ''.join(c for c in text if ord(c) <= 0xFFFF)
 
 # fonction pour formater le texte braille avec des espaces au début de chaque paragraphe (alinéa)
 def texte_braille_pdf(texte, largeur_max, pdf):
@@ -74,6 +72,7 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
     if duree and langue:  # il faut avoir choisi les options
         #api_key = st.secrets["api_key"]  # clé de l'API dans le fichier secret de Streamlit
         api_key = "03085edf113f4403811720f6a880423e"
+
         # les paramètres pour les 4 appels de l'API
         params_usine = {  # Usine Digitale
             "q": "",
@@ -145,7 +144,7 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
                     # élément
 
                     if langue == "Français":  # si la revue de presse est en français
-                        contenu = re.sub(r'\n{3,}', '\n\n', remove_unsupported_characters(contenu))
+                        contenu = re.sub(r'\n{3,}', '\n\n', contenu)
                         sortie += (
                             f"Titre : {art['title']}\n"  # titre
                             f"Source : {art['source']['name']}\n"  # source
@@ -156,7 +155,7 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
                             sortie += "------------------------------\n\n"
 
                     else:  # si c'est en braille
-                        contenu = re.sub(r'\n{3,}', '\n\n', remove_unsupported_characters(contenu))
+                        contenu = re.sub(r'\n{3,}', '\n\n', contenu)
                         sortie += (
                             f"⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\n"  # titre
                             f"\n\n"
@@ -185,14 +184,14 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
                         para_br = texte_braille_pdf(para, 190, pdf)
                         pdf.multi_cell(0, 12, para_br)
                         pdf.ln(1)  # saut de ligne
-                    else:  # pour le français
+                    else:   # pour le français
                         pdf.set_font('DejaVu', '', 12)
                         pdf.multi_cell(0, 10, para)
                         pdf.ln()  # saut de ligne
 
                 # buffer pour stocker le fichier PDF
                 buffer = BytesIO()
-                pdf_data = pdf.output(dest='S').encode('latin1') # 'S' : contenu sous forme de str
+                pdf_data = pdf.output(dest='S').encode('latin1')  # 'S' : contenu sous forme de str
                 buffer.write(pdf_data)
                 buffer.seek(0)  # retour au début du buffer
 
@@ -206,9 +205,14 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
         # si aucun article n'a été récupéré (les articles de la veille ne sont pas publiés)
         if not articles and duree == "depuis hier":
             st.error(
-                "Les articles de la veille ne sont pas encore disponibles en raison d'un décalage de"
-                " 24h entre leur publication et leur mise en ligne sur l'API. Veuillez choisir une "
-                "durée plus longue s'il vous plaît.")
+                "Les articles de la veille ne sont pas encore disponibles en raison"
+                " d'un décalage de 24h entre leur publication et leur mise en ligne "
+                "sur l'API. Veuillez choisir une durée plus longue s'il vous plaît.")
 
     else:
         st.error("Veuillez remplir tous les champs avant de générer la revue de presse.")
+
+
+
+
+
