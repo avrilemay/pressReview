@@ -143,7 +143,7 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
                     # élément
 
                     if langue == "Français":  # si la revue de presse est en français
-                        contenu = re.sub(r'\n{3,}', '\n\n', contenu)
+                        contenu = re.sub(r'\n{3,}', '\n\n', clean_text(contenu))
                         sortie += (
                             f"Titre : {art['title']}\n"  # titre
                             f"Source : {art['source']['name']}\n"  # source
@@ -154,7 +154,7 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
                             sortie += "------------------------------\n\n"
 
                     else:  # si c'est en braille
-                        contenu = re.sub(r'\n{3,}', '\n\n', contenu)
+                        contenu = re.sub(r'\n{3,}', '\n\n', clean_text(contenu))
                         sortie += (
                             f"⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\n"  # titre
                             f"\n\n"
@@ -210,3 +210,8 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
 
     else:
         st.error("Veuillez remplir tous les champs avant de générer la revue de presse.")
+
+
+
+def clean_text(texte):
+    return ''.join([c if ord(c) <= 65535 else '?' for c in texte])
