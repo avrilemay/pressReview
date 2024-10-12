@@ -70,8 +70,7 @@ langue = st.radio(  # choix de la langue
 
 if st.button("Générer la revue de presse"):  # bouton pour générer la revue de presse
     if duree and langue:  # il faut avoir choisi les options
-        #api_key = st.secrets["api_key"]  # clé de l'API dans le fichier secret de Streamlit
-        api_key = "03085edf113f4403811720f6a880423e"
+        api_key = st.secrets["api_key"]  # clé de l'API dans le fichier secret de Streamlit
 
         # les paramètres pour les 4 appels de l'API
         params_usine = {  # Usine Digitale
