@@ -8,7 +8,7 @@ The application uses the NewsAPI to retrieve articles, the Newspaper library to 
 
 ## Features
 
-- **Time Period Selection**: Choose to retrieve articles published since yesterday, the last 7 days, or the last 30 days.
+- **Time Period Selection**: Choose to retrieve articles published in the last 3 days, 7 days or 30 days.
 - **Language**: Select the language for generating the newsletter (French or Braille).
 - **Download**: Download the generated newsletter in PDF format.
 
