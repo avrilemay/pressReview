@@ -61,9 +61,9 @@ if duree == "depuis 3 jours":  # date de début selon la durée choisie
     date_debut = date_fin - timedelta(days=3)
 elif duree == "depuis 7 jours":
     date_debut = date_fin - timedelta(days=7)
-elif duree == "depuis 30 jours":
-    date_debut = date_fin - timedelta(days=28)
-
+elif duree == "depuis 30 jours":  # gestion du mois de fév (+ court) blocage app
+    date_debut = date_fin - timedelta(days=28 if date_fin.month == 3 else 30)
+    
 langue = st.radio(  # choix de la langue
     "Sélectionnez la langue de génération",
     options=["Français", "Braille"])
