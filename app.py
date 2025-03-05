@@ -1,7 +1,7 @@
 # Nom ......... : app.py
 # Rôle ........ : Application Streamlit (génération de revue de presse) + formatage
 # Auteur ...... : Avrile Floro
-# Version ..... : V0.3 du 01/09/2024
+# Version ..... : V0.3 du 05/03/2025
 # Licence ..... : réalisé dans le cadre du cours de I&C & DLL (projet)
 
 from traduction import traduction
@@ -53,12 +53,12 @@ st.title("Générateur de Revue de Presse")  # titre de l'interface Streamlit
 
 duree = st.selectbox(  # sélection de la durée
     "Récupérer des articles publiés...",
-    options=["depuis hier", "depuis 7 jours", "depuis 30 jours"], )
+    options=["depuis 3 jours", "depuis 7 jours", "depuis 30 jours"], )
 
 date_fin = datetime.today()  # jusqu'à date du jour
 
-if duree == "depuis hier":  # date de début selon la durée choisie
-    date_debut = date_fin - timedelta(days=1)
+if duree == "depuis 3 jours":  # date de début selon la durée choisie
+    date_debut = date_fin - timedelta(days=3)
 elif duree == "depuis 7 jours":
     date_debut = date_fin - timedelta(days=7)
 elif duree == "depuis 30 jours":
@@ -201,17 +201,5 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
                     mime="application/pdf"
                 )
 
-        # si aucun article n'a été récupéré (les articles de la veille ne sont pas publiés)
-        if not articles and duree == "depuis hier":
-            st.error(
-                "Les articles de la veille ne sont pas encore disponibles en raison"
-                " d'un décalage de 24h entre leur publication et leur mise en ligne "
-                "sur l'API. Veuillez choisir une durée plus longue s'il vous plaît.")
-
     else:
         st.error("Veuillez remplir tous les champs avant de générer la revue de presse.")
-
-
-
-
-
