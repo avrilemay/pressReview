@@ -62,7 +62,7 @@ if duree == "depuis 3 jours":  # date de début selon la durée choisie
 elif duree == "depuis 7 jours":
     date_debut = date_fin - timedelta(days=7)
 elif duree == "depuis 30 jours":
-    date_debut = date_fin - timedelta(days=30)
+    date_debut = date_fin - timedelta(days=28)
 
 langue = st.radio(  # choix de la langue
     "Sélectionnez la langue de génération",
@@ -190,7 +190,7 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
 
                 # buffer pour stocker le fichier PDF
                 buffer = BytesIO()
-                pdf_data = pdf.output(dest='S').encode('latin1', errors='ignore')
+                pdf_data = pdf.output(dest='S').encode('latin1')
                 buffer.write(pdf_data)
                 buffer.seek(0)  # retour au début du buffer
 
