@@ -63,7 +63,7 @@ elif duree == "depuis 7 jours":
     date_debut = date_fin - timedelta(days=7)
 elif duree == "depuis 30 jours":  # gestion du mois de fév (+ court) blocage app
     date_debut = date_fin - timedelta(days=28 if date_fin.month == 3 else 30)
-    
+
 langue = st.radio(  # choix de la langue
     "Sélectionnez la langue de génération",
     options=["Français", "Braille"])
@@ -72,7 +72,7 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
     if duree and langue:  # il faut avoir choisi les options
         api_key = st.secrets["api_key"]  # clé de l'API dans le fichier secret de Streamlit
 
-        # les paramètres pour les 4 appels de l'API
+        # les paramètres pour les 3 appels de l'API
         params_usine = {  # Usine Digitale
             "q": "",
             "from": date_debut.strftime('%Y-%m-%d'),
@@ -93,16 +93,6 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
             "domains": "francetvinfo.fr",
             "apiKey": api_key, }
 
-        params_huffpost = {  # Huffington Post
-            "q": "",
-            "from": date_debut.strftime('%Y-%m-%d'),
-            "to": date_fin.strftime('%Y-%m-%d'),
-            "sortBy": "popularity",
-            "language": "fr",
-            "pageSize": 1,
-            "domains": "huffingtonpost.fr",
-            "apiKey": api_key, }
-
         params_journaldunet = {  # Journal du Net
             "q": "",
             "from": date_debut.strftime('%Y-%m-%d'),
@@ -114,8 +104,8 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
             "apiKey": api_key, }
 
         articles = []  # pour stocker les articles
-        # appelle l'API pour les 4 sources souhaitées
-        for param in [params_usine, params_france_info, params_huffpost, params_journaldunet]:
+        # appelle l'API pour les 3 sources souhaitées
+        for param in [params_usine, params_france_info, params_journaldunet]:
             try:
                 # envoi la requête GET à l'API
                 response = requests.get("https://newsapi.org/v2/everything", params=param)
