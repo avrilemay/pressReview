@@ -162,8 +162,7 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
                 font_path = "fonts/DejaVuSans.ttf"  # dossier contenant DejaVuSans
                 pdf = FPDF()  # créer un objet PDF
                 pdf.add_page()  # on y ajoute page
-                pdf.unifontsubset = False
-                # utilisation de la police DejaVu supportant les caractères brailles
+                pdf.unifontsubset = False  # utilisation DejaVu pour caract. brailles:
                 pdf.add_font('DejaVu', '', font_path, uni=True)
 
                 # traitement du contenu paragraphe par paragraphe pour l'ajout au PDF
