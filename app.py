@@ -53,8 +53,7 @@ st.title("Générateur de Revue de Presse")  # titre de l'interface Streamlit
 
 duree = st.selectbox(  # sélection de la durée
     "Récupérer des articles publiés...",
-    options=["depuis 3 jours", "depuis 7 jours", "depuis 30 jours"],
-)
+    options=["depuis 3 jours", "depuis 7 jours", "depuis 30 jours"], )
 
 date_fin = datetime.today()  # jusqu'à date du jour
 
@@ -67,8 +66,7 @@ elif duree == "depuis 30 jours":  # gestion du mois de fév (+ court) blocage ap
 
 langue = st.radio(  # choix de la langue
     "Sélectionnez la langue de génération",
-    options=["Français", "Braille"]
-)
+    options=["Français", "Braille"])
 
 if st.button("Générer la revue de presse"):  # bouton pour générer la revue de presse
     if duree and langue:  # il faut avoir choisi les options
@@ -83,8 +81,7 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
             "language": "fr",
             "pageSize": 1,
             "domains": "usine-digitale.fr",
-            "apiKey": api_key,
-        }
+            "apiKey": api_key, }
 
         params_france_info = {  # France Info
             "q": "",
@@ -94,8 +91,7 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
             "language": "fr",
             "pageSize": 1,
             "domains": "francetvinfo.fr",
-            "apiKey": api_key,
-        }
+            "apiKey": api_key, }
 
         params_journaldunet = {  # Journal du Net
             "q": "",
@@ -105,14 +101,15 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
             "language": "fr",
             "pageSize": 1,
             "domains": "journaldunet.com",
-            "apiKey": api_key,
-        }
+            "apiKey": api_key, }
 
         articles = []  # pour stocker les articles
         # appelle l'API pour les 3 sources souhaitées
         for param in [params_usine, params_france_info, params_journaldunet]:
             try:
+                # envoi la requête GET à l'API
                 response = requests.get("https://newsapi.org/v2/everything", params=param)
+                # ajout des art obtenus à liste articles avec extends (sous forme de dico)
                 articles.extend(response.json().get("articles", []))
             except Exception as e:
                 print(f"Erreur lors de la récupération des articles : {e}")
@@ -122,76 +119,72 @@ if st.button("Générer la revue de presse"):  # bouton pour générer la revue 
             sortie = ""  # str vide initialisée pour la sortie
             for index, art in enumerate(articles):  # boucle avec index pour suivre la position
                 article_url = art['url']  # récupère l'URL
-
                 try:
-                    article_news = Article(article_url)
-                    article_news.download()
-                    article_news.parse()
-                    contenu = article_news.text
+                    # utilise Newspaper pour récupérer le contenu de l'article
+                    article_news = Article(article_url)  # initialisation avec url
+                    article_news.download()  # téléchargement, obligatoire pour...
+                    article_news.parse()  # parser l'article
+                    contenu = article_news.text  # extrait le texte intégral de l'article
+                    date_publication = datetime.strptime(art['publishedAt'],
+                                                         "%Y-%m-%dT%H:%M:%SZ").strftime("%d-%m-%Y")
+                    # renvoie juste la date de publication
 
-                    date_publication = datetime.strptime(
-                        art['publishedAt'], "%Y-%m-%dT%H:%M:%SZ"
-                    ).strftime("%d-%m-%Y")
+                    dernier_art = (index == len(articles) - 1)  # vérifie si c'est le dernier
+                    # élément
 
-                    dernier_art = (index == len(articles) - 1)
-
-                    # Nettoyage basique du contenu (suppression des multiples sauts de ligne)
-                    contenu = re.sub(r'\n{3,}', '\n\n', contenu)
-
-                    if langue == "Français":
-                        # Ajout du contenu en français
+                    if langue == "Français":  # si la revue de presse est en français
+                        contenu = re.sub(r'\n{3,}', '\n\n', contenu)
                         sortie += (
-                            f"Titre : {art['title']}\n"
-                            f"Source : {art['source']['name']}\n"
-                            f"Publié le : {date_publication}\n\n"
-                            f"{contenu}\n\n"
-                        )
-                        # Séparation si ce n'est pas le dernier
+                            f"Titre : {art['title']}\n"  # titre
+                            f"Source : {art['source']['name']}\n"  # source
+                            f"Publié le : {date_publication}\n\n"  # date 
+                            f"{contenu}\n\n")  # contenu
+                        # séparation seulement si ce n'est pas le dernier
                         if not dernier_art:
                             sortie += "------------------------------\n\n"
 
-                    else:  # Braille
-                        # Ajout du contenu en braille
+                    else:  # si c'est en braille
+                        contenu = re.sub(r'\n{3,}', '\n\n', contenu)
                         sortie += (
-                            f"⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\n"
+                            f"⠨⠞⠊⠞⠗⠑⠒ {traduction(art['title'])}\n"  # titre
                             f"\n\n"
-                            f"\u2800\u2800\u2800⠨⠎⠕⠥⠗⠉⠑⠒ {traduction(art['source']['name'])}\n\n"
-                            f"⠨⠏⠥⠃⠇⠊⠿ ⠇⠑⠒ {traduction(date_publication)}\n\n"
-                            f"{traduction(contenu)}\n"
-                        )
-                        # Séparation en braille si ce n'est pas le dernier
+                            f"\u2800\u2800\u2800⠨⠎⠕⠥⠗⠉⠑⠒ {traduction(art['source']['name'])}\n\n"  # source
+                            f"⠨⠏⠥⠃⠇⠊⠿ ⠇⠑⠒ {traduction(date_publication)}\n\n"  # date 
+                            f"{traduction(contenu)}\n")  # contenu
+                        # séparation en braille seulement si ce n'est pas le dernier
                         if not dernier_art:
                             sortie += "⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶⠶\n\n\n"
 
                 except Exception as e:
                     print(f"Erreur lors du traitement de l'article : {e}")
 
-            # Génération du PDF
-            if sortie:
+            if sortie:  # si la sortie n'est pas vide
                 font_path = "fonts/DejaVuSans.ttf"  # dossier contenant DejaVuSans
-                pdf = FPDF()
-                pdf.add_page()
+                pdf = FPDF()  # créer un objet PDF
+                pdf.add_page()  # on y ajoute page
+                # utilisation de la police DejaVu supportant les caractères brailles
                 pdf.add_font('DejaVu', '', font_path, uni=True)
 
-                # Pour chaque paragraphe, on ajoute au PDF
-                for para in sortie.split("\n\n"):
+                # traitement du contenu paragraphe par paragraphe pour l'ajout au PDF
+                for para in sortie.split("\n\n"):  # pour chaque paragraphe
                     if langue == "Braille":
-                        pdf.set_font('DejaVu', '', 18)
+                        pdf.set_font('DejaVu', '', 18)  # taille plus grand
+                        # ajuste le texte pour le braille et ajoute au pdf
                         para_br = texte_braille_pdf(para, 190, pdf)
                         pdf.multi_cell(0, 12, para_br)
-                        pdf.ln(1)
-                    else:
+                        pdf.ln(1)  # saut de ligne
+                    else:   # pour le français
                         pdf.set_font('DejaVu', '', 12)
                         pdf.multi_cell(0, 10, para)
-                        pdf.ln()
+                        pdf.ln()  # saut de ligne
 
-                # Récupération du PDF en flux binaire
-                pdf_data = pdf.output(dest='B')  # <-- binaire direct, pas de reconversion latin1
-                buffer = BytesIO(pdf_data)
-                buffer.seek(0)
+                # buffer pour stocker le fichier PDF
+                buffer = BytesIO()
+                pdf_data = pdf.output(dest='S').encode('latin1')
+                buffer.write(pdf_data)
+                buffer.seek(0)  # retour au début du buffer
 
-                # Bouton de téléchargement
-                st.download_button(
+                st.download_button(  # bouton pour télécharger le PDF
                     label="Télécharger en PDF",
                     data=buffer,
                     file_name="revueDePresse.pdf",
